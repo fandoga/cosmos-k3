@@ -1,0 +1,504 @@
+/* ==========================================================================
+   COSMOS · 65 лет спустя — concept scene
+   ========================================================================== */
+
+:root {
+  --black: #030406;
+  --graphite: #0c0f13;
+  --blue: #8fb0e0;
+  --blue-deep: #1d2d63;
+  --white: #eef1f5;
+  --muted: rgba(238, 241, 245, 0.56);
+  --faint: rgba(238, 241, 245, 0.32);
+  --hair: rgba(238, 241, 245, 0.18);
+
+  --sans: "Inter", system-ui, sans-serif;
+  --mono: "Space Mono", ui-monospace, monospace;
+
+  --gutter: clamp(20px, 3.2vw, 56px);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { background: var(--black); scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
+
+body {
+  margin: 0;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--sans);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body.is-loading { overflow: hidden; }
+
+img, video, canvas { display: block; }
+
+.mono {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Loader
+   -------------------------------------------------------------------------- */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 28px;
+  background: var(--black);
+}
+
+.loader__logo {
+  width: 92px;
+  height: auto;
+  opacity: 0.9;
+}
+
+.loader__bar {
+  position: relative;
+  width: 160px;
+  height: 1px;
+  background: var(--hair);
+  overflow: hidden;
+}
+
+.loader__bar span {
+  position: absolute;
+  inset: 0;
+  background: var(--white);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.loader__pct { color: var(--faint); font-size: 10px; }
+
+/* --------------------------------------------------------------------------
+   Brand
+   -------------------------------------------------------------------------- */
+
+.brand {
+  position: fixed;
+  top: var(--gutter);
+  left: var(--gutter);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.brand img {
+  width: clamp(64px, 5.4vw, 88px);
+  height: auto;
+  opacity: 0.92;
+}
+
+/* --------------------------------------------------------------------------
+   Journey (pinned stage)
+   -------------------------------------------------------------------------- */
+
+.journey {
+  position: relative;
+  height: 100vh;
+  height: 100lvh;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 70% 110%, rgba(29, 45, 99, 0.16), transparent 60%),
+    var(--black);
+  contain: layout paint;
+}
+
+.stage > * { position: absolute; }
+
+.stars,
+.orbit,
+.film {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.orbit { z-index: 3; pointer-events: none; }
+
+/* Earth — native 2560×1440 video, positioned + scaled by JS around the planet centre */
+.earth {
+  left: 0;
+  top: 0;
+  width: 2560px;
+  height: 1440px;
+  transform-origin: 1224px 744px;
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
+  opacity: 0;
+  -webkit-mask-image: radial-gradient(circle 720px at 1224px 744px, #000 600px, transparent 720px);
+          mask-image: radial-gradient(circle 720px at 1224px 744px, #000 600px, transparent 720px);
+}
+
+.earth__video {
+  width: 100%;
+  height: 100%;
+  filter: saturate(0.82) brightness(0.86) contrast(1.06);
+}
+
+/* Earth limb behind the floating watch */
+.limb {
+  left: 0;
+  top: 0;
+  width: 1200px;
+  height: 2608px;
+  transform-origin: 0 0;
+  will-change: transform, opacity;
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 52%, #000 63%);
+          mask-image: linear-gradient(to bottom, transparent 52%, #000 63%);
+}
+
+.limb img {
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Typography
+   -------------------------------------------------------------------------- */
+
+.title {
+  z-index: 3;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.big {
+  margin: 0;
+  display: flex;
+  font-weight: 300;
+  font-size: clamp(160px, 38vh, 440px);
+  line-height: 0.8;
+  letter-spacing: 0;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "ss01", "cv05";
+}
+
+/* Reveal mask. Tracking is done with margins, not letter-spacing: background-clip:text only
+   paints inside the digit's own box, so a negative letter-spacing would cut the glyph's right edge. */
+.mask {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.04em 0.08em 0.06em;
+  margin: -0.04em -0.08em -0.06em;
+}
+
+.mask + .mask { margin-left: calc(-0.08em - 0.045em); }
+
+.digit {
+  display: inline-block;
+  padding: 0 0.02em;
+  background: linear-gradient(180deg, #ffffff 0%, #e6ebf2 46%, rgba(206, 216, 232, 0.62) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  will-change: transform;
+}
+
+.title__sub {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(13px, 1.05vw, 17px);
+  letter-spacing: 0.62em;
+  color: var(--white);
+}
+
+.title__dates {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(10px, 0.72vw, 12px);
+  letter-spacing: 0.32em;
+  color: var(--muted);
+}
+
+.title__dates i {
+  display: block;
+  width: 56px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--faint), rgba(143, 176, 224, 0.7));
+}
+
+/* 65 — left, low third, lots of air */
+.title--65 {
+  left: calc(var(--gutter) * 1.9);
+  top: 50%;
+  transform: translateY(-46%);
+  display: grid;
+  gap: 0;
+}
+
+.title--65 .big { margin-left: -0.06em; }
+.title--65 .title__info { display: grid; margin-top: clamp(22px, 3.4vh, 40px); }
+.title--65 .title__dates { margin-top: 18px; }
+
+/* 108 — main object of the orbital scene */
+.title--108 {
+  left: calc(var(--gutter) * 1.4);
+  top: 50%;
+  transform: translateY(-54%);
+  display: grid;
+  opacity: 0;
+}
+
+.title--108 .big {
+  font-size: clamp(170px, 44vh, 520px);
+  margin-left: -0.06em;
+}
+
+.title__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+  margin-top: clamp(20px, 3vh, 36px);
+  padding-left: 0.4em;
+}
+
+.title__tech {
+  color: var(--blue);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+}
+
+.title__tech::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 12px;
+  border-radius: 50%;
+  background: var(--blue);
+  vertical-align: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   Watch (layered PNG, geometry set by JS)
+   -------------------------------------------------------------------------- */
+
+.watch {
+  left: 0;
+  top: 0;
+  z-index: 2;
+  opacity: 0;
+}
+
+.w {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* thin cold rim that makes the silhouette readable against space */
+.w--rim {
+  filter: brightness(0) invert(0.82) sepia(0.4) hue-rotate(180deg) saturate(1.6) blur(5px);
+  opacity: 0;
+}
+
+.w--body { filter: brightness(0); }
+
+/* dial lights up first, from the centre outwards */
+.w--dial {
+  --dr: 0px;
+  -webkit-mask-image: radial-gradient(circle var(--dr) at 47.42% 46.14%, #000 72%, transparent 100%);
+          mask-image: radial-gradient(circle var(--dr) at 47.42% 46.14%, #000 72%, transparent 100%);
+  filter: brightness(0.92);
+}
+
+.w--lit { opacity: 0; }
+
+/* a band of light passing over the steel */
+.w--sweep {
+  --s: -40%;
+  filter: brightness(1.9) contrast(1.05);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(112deg, transparent calc(var(--s) - 14%), #000 var(--s), transparent calc(var(--s) + 14%));
+          mask-image: linear-gradient(112deg, transparent calc(var(--s) - 14%), #000 var(--s), transparent calc(var(--s) + 14%));
+}
+
+/* --------------------------------------------------------------------------
+   Film (macro)
+   -------------------------------------------------------------------------- */
+
+.film {
+  z-index: 2;
+  opacity: 0;
+  filter: contrast(1.06) brightness(0.94) saturate(1.04);
+}
+
+.film-vignette {
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 62% 74% at 51% 52%, transparent 40%, rgba(3, 4, 6, 0.72) 76%, var(--black) 100%);
+}
+
+
+/* --------------------------------------------------------------------------
+   HUD
+   -------------------------------------------------------------------------- */
+
+.hud {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hud__coord,
+.hud__clock {
+  position: absolute;
+  bottom: var(--gutter);
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.hud__coord { left: var(--gutter); }
+
+.hud__coord-b { color: var(--faint); }
+
+.hud__clock {
+  right: var(--gutter);
+  grid-auto-flow: column;
+  gap: 10px;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud__clock-label { color: var(--blue); }
+
+.hud__rail {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  width: 1px;
+  height: 18vh;
+  transform: translateY(-50%);
+  background: var(--hair);
+}
+
+.hud__rail span {
+  position: absolute;
+  inset: 0;
+  background: var(--white);
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+}
+
+.hud__cue {
+  position: absolute;
+  left: 50%;
+  bottom: var(--gutter);
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  transform: translateX(-50%);
+  color: var(--faint);
+  font-size: 9px;
+  letter-spacing: 0.34em;
+}
+
+.hud__cue i {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 36px;
+  background: var(--hair);
+  overflow: hidden;
+}
+
+.hud__cue i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 40%;
+  background: var(--white);
+  animation: cue 2.4s var(--ease-out) infinite;
+}
+
+@keyframes cue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(260%); }
+}
+
+/* --------------------------------------------------------------------------
+   Grain — keeps the blacks filmic instead of flat
+   -------------------------------------------------------------------------- */
+
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 9;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 767px), (max-aspect-ratio: 9/10) {
+  .title--65 {
+    left: var(--gutter);
+    top: 17%;
+    transform: none;
+  }
+
+  .big { font-size: clamp(120px, 44vw, 260px); }
+  .title--108 .big { font-size: clamp(130px, 50vw, 300px); }
+
+  .title--108 {
+    left: var(--gutter);
+    top: 13%;
+    transform: none;
+  }
+
+  .title__sub { letter-spacing: 0.5em; }
+  .title__dates { flex-wrap: wrap; gap: 10px 14px; letter-spacing: 0.24em; }
+  .title__dates i { width: 28px; }
+
+  .hud__rail { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud__cue i::after { animation: none; }
+}

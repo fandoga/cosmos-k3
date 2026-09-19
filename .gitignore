@@ -1,0 +1,10 @@
+# local tooling
+.agents/
+.claude/
+skills-lock.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+node_modules/
